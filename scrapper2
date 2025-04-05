@@ -1,0 +1,67 @@
+import requests
+from bs4 import BeautifulSoup
+import csv
+from urllib.parse import urljoin
+
+# Create a session and add headers to mimic a browser
+session = requests.Session()
+session.headers.update({
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36",
+    "Accept-Language": "en-US,en;q=0.9",
+    "Referer": "https://www.google.com/",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    "Connection": "keep-alive"
+})
+
+def scrape_documents_from_page(page_url, output_file, terminal_output_file, urls_file):
+    try:
+        # Send a GET request with headers
+        page_response = session.get(page_url)
+        print(f"[{page_response.status_code}] {page_url}")
+
+        if page_response.status_code == 200:
+            page_soup = BeautifulSoup(page_response.text, 'html.parser')
+            links = page_soup.find_all('a', href=True)
+
+            for link in links:
+                linked_page_url = urljoin(page_url, link['href'])
+
+                if 'doctypes' in linked_page_url:
+                    document_response = session.get(linked_page_url)
+
+                    if document_response.status_code == 200:
+                        document_soup = BeautifulSoup(document_response.text, 'html.parser')
+                        document_text_div = document_soup.find('div', class_='judgments')
+
+                        if document_text_div:
+                            document_text = document_text_div.get_text(strip=True)
+
+                            with open(urls_file, 'a', newline='', encoding='utf-8') as f:
+                                writer = csv.writer(f)
+                                writer.writerow([linked_page_url])
+
+                            with open(output_file, 'a', newline='', encoding='utf-8') as f:
+                                writer = csv.writer(f)
+                                writer.writerow([document_text])
+                        else:
+                            print(f"⚠️ 'judgments' div not found in: {linked_page_url}")
+                    else:
+                        print(f"❌ Failed to get document page: {linked_page_url} ({document_response.status_code})")
+
+            next_link = page_soup.find('a', text='Next')
+            if next_link:
+                next_page_url = urljoin(page_url, next_link['href'])
+                scrape_documents_from_page(next_page_url, output_file, terminal_output_file, urls_file)
+
+        else:
+            print(f"❌ Failed to get main page: {page_url} ({page_response.status_code})")
+    except Exception as e:
+        print(f"🔥 Exception while scraping {page_url}: {str(e)}")
+
+# Main URL and output files
+main_page_url = 'https://indiankanoon.org/search/?formInput=doctypes:supremecourt%20year:1951'
+output_file = 'output3.csv'
+terminal_output_file = 'terminal_output.csv'
+urls_file = 'urls.csv'
+
+scrape_documents_from_page(main_page_url, output_file, terminal_output_file, urls_file)
