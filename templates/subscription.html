@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NyaySetu - Subscription Plans</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+<style>
+:root {
+  --black-pure: #000000;
+  --black-primary: #0A0A0A;
+  --black-secondary: #121212;
+  --gray-900: #1F1F1F;
+  --gray-700: #3A3A3A;
+  --gray-500: #6B6B6B;
+  --gray-300: #ABABAB;
+  --gray-100: #E5E5E5;
+  --white-pure: #FFFFFF;
+  --white-smoke: #F8F8F8;
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #E5E5E5;
+  --text-muted: #ABABAB;
+
+  --glass-dark: rgba(10, 10, 10, 0.85);
+  --glass-medium: rgba(26, 26, 26, 0.75);
+  --glass-light: rgba(255, 255, 255, 0.05);
+  --glass-white: rgba(255, 255, 255, 0.1);
+
+  --border-white: rgba(255, 255, 255, 0.15);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+  --shadow-white: 0 8px 24px rgba(255, 255, 255, 0.1);
+  --shadow-glow: 0 0 30px rgba(255, 255, 255, 0.15);
+
+  --accent-gold: #FFD700;
+  --accent-green: #10B981;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, var(--black-pure) 0%, var(--black-primary) 50%, var(--black-secondary) 100%);
+  background-attachment: fixed;
+  color: var(--text-primary);
+  overflow-x: hidden;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Background particles */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%);
+  z-index: -1;
+  animation: float 20s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+}
+
+/* HEADER */
+.header {
+  background: var(--glass-dark);
+  backdrop-filter: blur(24px) saturate(180%);
+  padding: 1.25rem 2.5rem;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+  border-bottom: 1px solid var(--border-white);
+  box-shadow: var(--shadow-md);
+}
+
+.nav-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  text-decoration: none;
+}
+
+.logo {
+  width: 52px;
+  height: 52px;
+  background: linear-gradient(135deg, var(--white-pure), var(--gray-100));
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  box-shadow: var(--shadow-white);
+  border: 2px solid var(--white-pure);
+}
+
+.brand-text h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--white-pure), var(--gray-100));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.brand-text p {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+.btn-back {
+  padding: 0.75rem 1.5rem;
+  background: var(--glass-light);
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-white);
+  border-radius: 10px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-back:hover {
+  background: var(--glass-white);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-white);
+}
+
+/* MAIN CONTENT */
+.main-content {
+  margin-top: 120px;
+  padding: 2rem;
+  min-height: calc(100vh - 120px);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* HERO SECTION */
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  margin-bottom: 4rem;
+}
+
+.hero-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, var(--white-pure) 0%, var(--gray-100) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.2;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.2));
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: var(--glass-white);
+  border: 1.5px solid var(--accent-green);
+  border-radius: 50px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--accent-green);
+  margin-bottom: 1rem;
+}
+
+/* PRICING CARDS */
+.pricing-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-bottom: 4rem;
+}
+
+.pricing-card {
+  background: var(--glass-light);
+  border: 2px solid var(--border-white);
+  border-radius: 24px;
+  padding: 3rem;
+  backdrop-filter: blur(24px) saturate(180%);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+}
+
+.pricing-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.pricing-card:hover::before {
+  opacity: 1;
+}
+
+.pricing-card:hover {
+  transform: translateY(-12px) scale(1.03);
+  border-color: var(--white-pure);
+  box-shadow: var(--shadow-xl), var(--shadow-glow);
+}
+
+.pricing-card.featured {
+  border-color: var(--accent-gold);
+  background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), var(--glass-light));
+}
+
+.featured-badge {
+  position: absolute;
+  top: 20px;
+  right: -30px;
+  background: linear-gradient(135deg, var(--accent-gold), #FFA500);
+  color: var(--black-primary);
+  padding: 0.5rem 3rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transform: rotate(45deg);
+  box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+  letter-spacing: 0.5px;
+}
+
+.plan-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.plan-icon {
+  font-size: 3rem;
+  margin-bottom: 1.5rem;
+  display: inline-block;
+  filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+}
+
+.price-container {
+  margin-bottom: 2rem;
+}
+
+.price {
+  font-size: 3.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--white-pure), var(--gray-100));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+
+.price-period {
+  font-size: 1rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.savings-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--accent-green), #059669);
+  color: var(--white-pure);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-top: 0.75rem;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.features-list {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.features-list li {
+  padding: 0.75rem 0;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.features-list li:last-child {
+  border-bottom: none;
+}
+
+.features-list i {
+  color: var(--accent-green);
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.btn-subscribe {
+  width: 100%;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--white-pure), var(--gray-100));
+  color: var(--black-primary);
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-white);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-subscribe:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-glow);
+}
+
+.btn-subscribe.secondary {
+  background: var(--glass-white);
+  color: var(--white-pure);
+  border: 2px solid var(--border-white);
+}
+
+.btn-subscribe.secondary:hover {
+  background: var(--glass-light);
+  border-color: var(--white-pure);
+}
+
+/* FAQ SECTION */
+.faq-section {
+  background: var(--glass-light);
+  border: 1.5px solid var(--border-white);
+  border-radius: 24px;
+  padding: 3rem;
+  margin-bottom: 4rem;
+  backdrop-filter: blur(24px);
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.faq-item {
+  margin-bottom: 1.5rem;
+  background: var(--glass-medium);
+  border: 1px solid var(--border-white);
+  border-radius: 16px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: var(--glass-white);
+  transform: translateX(5px);
+}
+
+.faq-question {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.faq-question i {
+  color: var(--accent-green);
+}
+
+.faq-answer {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  padding-left: 2rem;
+}
+
+/* FOOTER */
+.footer {
+  background: var(--glass-dark);
+  backdrop-filter: blur(24px);
+  padding: 2rem;
+  border-top: 2px solid var(--border-white);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .header {
+    padding: 1rem;
+  }
+
+  .main-content {
+    margin-top: 100px;
+    padding: 1rem;
+  }
+
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+
+  .pricing-section {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .faq-section {
+    padding: 2rem 1.5rem;
+  }
+
+  .price {
+    font-size: 2.5rem;
+  }
+}
+
+/* Toast Notification */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--white-pure), var(--gray-100));
+  color: var(--black-primary);
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: var(--shadow-glow);
+  z-index: 1001;
+  font-weight: 600;
+  display: none;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+</style>
+</head>
+
+<body>
+<!-- HEADER -->
+<header class="header">
+  <nav class="nav-container">
+    <a href="{{ url_for('home') }}" class="logo-section">
+      <div class="logo">⚖️</div>
+      <div class="brand-text">
+        <h1>NyaySetu</h1>
+        <p>Complete Legal Platform</p>
+      </div>
+    </a>
+
+    <a href="{{ url_for('home') }}" class="btn-back">
+      <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+  </nav>
+</header>
+
+<!-- MAIN CONTENT -->
+<main class="main-content">
+  <div class="container">
+
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+      <div class="trust-badge">
+        <i class="fas fa-shield-check"></i>
+        <span>Secure Payment • Cancel Anytime</span>
+      </div>
+      <h1 class="hero-title">Choose Your Plan</h1>
+      <p class="hero-subtitle">
+        Get unlimited access to our complete legal platform. AI-powered assistance,
+        comprehensive law library, and professional research tools.
+      </p>
+    </section>
+
+    <!-- PRICING CARDS -->
+    <section class="pricing-section">
+
+      <!-- MONTHLY PLAN -->
+      <div class="pricing-card">
+        <div class="plan-icon">📅</div>
+        <h3 class="plan-name">Monthly Plan</h3>
+
+        <div class="price-container">
+          <div class="price">₹200</div>
+          <div class="price-period">per month</div>
+        </div>
+
+        <ul class="features-list">
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Unlimited AI Legal Assistant</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Access to 10,000+ Legal Documents</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Advanced Case Research Tools</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Document Analysis & Review</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Court Case Tracking</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Real-time Legal News Updates</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>24/7 Platform Access</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Email Support</span>
+          </li>
+        </ul>
+
+        <a href="#contact" class="btn-subscribe secondary">
+          <i class="fas fa-envelope"></i> Contact for Monthly Plan
+        </a>
+      </div>
+
+      <!-- ANNUAL PLAN (FEATURED) -->
+      <div class="pricing-card featured">
+        <div class="featured-badge">BEST VALUE</div>
+        <div class="plan-icon">🏆</div>
+        <h3 class="plan-name">Annual Plan</h3>
+
+        <div class="price-container">
+          <div class="price">₹1,500</div>
+          <div class="price-period">per year</div>
+          <div class="savings-badge">
+            <i class="fas fa-tag"></i> Save ₹900 (37% OFF)
+          </div>
+        </div>
+
+        <ul class="features-list">
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span><strong>Everything in Monthly Plan</strong></span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Unlimited AI Legal Assistant</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Access to 10,000+ Legal Documents</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Advanced Case Research Tools</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Priority Email Support</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Exclusive Webinars & Training</span>
+          </li>
+          <li>
+            <i class="fas fa-check-circle"></i>
+            <span>Early Access to New Features</span>
+          </li>
+          <li>
+            <i class="fas fa-crown"></i>
+            <span><strong>Premium Badge on Profile</strong></span>
+          </li>
+        </ul>
+
+        <a href="#contact" class="btn-subscribe">
+          <i class="fas fa-crown"></i> Contact for Annual Plan
+        </a>
+      </div>
+
+    </section>
+
+    <!-- FAQ SECTION -->
+    <section class="faq-section">
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          What payment methods do you accept?
+        </div>
+        <div class="faq-answer">
+          We accept all major credit cards, debit cards, UPI, net banking, and digital wallets through our secure payment gateway.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          Can I cancel my subscription anytime?
+        </div>
+        <div class="faq-answer">
+          Yes! You can cancel your subscription at any time from your account settings. Your access will continue until the end of your billing period.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          Is there a free trial available?
+        </div>
+        <div class="faq-answer">
+          Yes, we offer a 7-day free trial for new users. You can explore all premium features before committing to a paid plan.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          Can I upgrade from monthly to annual plan?
+        </div>
+        <div class="faq-answer">
+          Absolutely! You can upgrade at any time and we'll prorate your existing subscription credit towards the annual plan.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          Is my payment information secure?
+        </div>
+        <div class="faq-answer">
+          Yes, all payments are processed through industry-standard encryption and PCI-compliant payment gateways. We never store your card details.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <div class="faq-question">
+          <i class="fas fa-question-circle"></i>
+          Do you offer refunds?
+        </div>
+        <div class="faq-answer">
+          We offer a 14-day money-back guarantee. If you're not satisfied with our service, contact us within 14 days for a full refund.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <p>&copy; 2025 NyaySetu Legal Platform. All rights reserved.</p>
+  <p style="margin-top: 0.5rem;">
+    <a href="#terms" style="color: var(--text-secondary); margin: 0 1rem;">Terms of Service</a>
+    <a href="#privacy" style="color: var(--text-secondary); margin: 0 1rem;">Privacy Policy</a>
+    <a href="#contact" style="color: var(--text-secondary); margin: 0 1rem;">Contact Us</a>
+  </p>
+</footer>
+
+<script>
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+
+// Add click feedback for contact buttons
+document.querySelectorAll('.btn-subscribe').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    const plan = this.textContent.includes('Monthly') ? 'Monthly' : 'Annual';
+    alert(`Thank you for your interest in the ${plan} Plan!\n\nPlease contact us at:\nEmail: support@nyaysetu.com\nPhone: +91-XXXXXXXXXX\n\nOr fill out the contact form to get started.`);
+  });
+});
+</script>
+
+</body>
+</html>

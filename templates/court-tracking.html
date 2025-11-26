@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>NyaySetu - Court Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      background: linear-gradient(135deg, #000000 0%, #121212 100%);
+      color: #fff;
+      margin: 0;
+      padding: 2rem;
+      min-height: 100vh;
+    }
+    .court-container {
+      max-width: 1080px;
+      margin: 2rem auto;
+      background: rgba(255,255,255,0.08);
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(255,255,255,0.1);
+      padding: 2rem 2rem 1.2rem 2rem;
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(16px);
+    }
+    .court-header {
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .logo-link {
+      text-decoration: none;
+      color: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .logo-link:hover {
+      opacity: 0.8;
+      transition: opacity 0.3s ease;
+    }
+    .court-title {
+      font-size: 2rem;
+      font-weight: 700;
+      color: #FFFFFF;
+      letter-spacing: 0.8px;
+    }
+    .last-updated {
+      font-size: 0.92rem;
+      color: #CCCCCC;
+    }
+    .courts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.2rem 2rem;
+    }
+    .court-card {
+      display: flex;
+      align-items: center;
+      background: linear-gradient(135deg, #FFFFFF 40%, #E5E5E5 100%);
+      color: #000000;
+      border-radius: 12px;
+      padding: 1rem 1.6rem;
+      font-size: 1.13rem;
+      font-weight: 600;
+      box-shadow: 0 4px 16px rgba(255,255,255,0.2);
+      cursor: pointer;
+      outline: none;
+      border: 1px solid rgba(255,255,255,0.2);
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      text-align: left;
+      text-decoration: none;
+      position: relative;
+      overflow: hidden;
+    }
+    .court-card:hover, .court-card:focus {
+      background: linear-gradient(135deg, #E5E5E5 10%, #FFFFFF 70%, #F5F5F5 100%);
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 8px 32px rgba(255,255,255,0.4);
+    }
+    .card-arrow {
+      margin-right: 1rem;
+      font-size: 1.23rem;
+      color: #000000;
+      background: #E5E5E5;
+      border-radius: 100px;
+      padding: 0.29em 0.51em;
+      display: inline-block;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background 0.19s, color 0.19s;
+    }
+    .court-card:hover .card-arrow, .court-card:focus .card-arrow {
+      background: #000000;
+      color: #FFFFFF;
+    }
+    @media (max-width: 700px) {
+      .court-container {padding: 1rem;}
+      .courts-grid {grid-template-columns: 1fr;}
+    }
+  </style>
+</head>
+<body>
+  <div class="court-container">
+    <div class="court-header">
+      <a href="{{ url_for('home') }}" class="logo-link">
+        <div class="court-title">⚖️ NyaySetu - Indian High Courts</div>
+      </a>
+      <div class="last-updated">Last updated: 01-08-2025</div>
+    </div>
+    <div class="courts-grid">
+      <a class="court-card" href="{{ url_for('static', filename='allahabad_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Allahabad High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='andhra_pradesh_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Andhra Pradesh High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='bombay_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Bombay High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='calcutta.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Calcutta High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='chattisgarh_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Chhattisgarh High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='delhi_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Delhi High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='gauhati_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Gauhati High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='gujarat_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Gujarat High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='himachal_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Himachal Pradesh High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='jammuKashmirLadakh_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> High Court of Jammu & Kashmir and Ladakh</a>
+      <a class="court-card" href="{{ url_for('static', filename='jharkhand_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Jharkhand High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='karnataka_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Karnataka High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='kerala_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Kerala High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='madhyaPradesh_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Madhya Pradesh High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='madras_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Madras High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='manipur_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Manipur High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='meghalaya.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Meghalaya High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='orissa.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Orissa High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='patna_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Patna High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='Punjab_data.pdf') }}" target="_blank">
+          <span class="card-arrow">&#8592;</span> Punjab & Haryana High Court
+      </a>
+      <a class="court-card" href="{{ url_for('static', filename='rajasthan_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Rajasthan High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='sikkim_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Sikkim High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='telangana_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> High Court for the State of Telangana</a>
+      <a class="court-card" href="{{ url_for('static', filename='tripura_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Tripura High Court</a>
+      <a class="court-card" href="{{ url_for('static', filename='uttarakhand_data.pdf') }}" target="_blank"><span class="card-arrow">&#8592;</span> Uttarakhand High Court</a>
+    </div>
+  </div>
+</body>
+</html>

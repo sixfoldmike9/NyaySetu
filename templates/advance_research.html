@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NyaySetu - Advanced Legal Research</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000000; }
+        ::-webkit-scrollbar-thumb { background: #4A4A4A; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6B6B6B; }
+
+        /* Animations */
+        .fade-in { animation: fadeIn 0.5s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .slide-up { animation: slideUp 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Glassmorphism effect */
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1.5px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-panel-light {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Glow effects */
+        .glow-white {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+        }
+
+        .glow-white-hover:hover {
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.25);
+        }
+
+        /* Responsive container */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem !important; }
+            .search-bar-mobile { flex-direction: column; gap: 0.5rem; }
+        }
+    </style>
+</head>
+<body class="bg-black text-slate-200 font-sans min-h-screen flex flex-col">
+
+    <nav class="w-full h-20 md:h-24 border-b border-white/15 bg-gradient-to-r from-black via-zinc-950 to-black backdrop-blur-md flex items-center justify-between px-4 md:px-8 fixed top-0 z-50 shadow-lg shadow-white/5">
+        <a href="{{ url_for('home') }}" class="flex items-center gap-3 md:gap-4 no-underline">
+            <div class="text-2xl md:text-3xl bg-gradient-to-br from-white to-gray-300 p-2.5 md:p-3 rounded-xl shadow-lg glow-white">
+                <i class="fa-solid fa-scale-balanced text-black"></i>
+            </div>
+            <div>
+                <h1 class="font-bold text-xl md:text-2xl bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-100 to-gray-200 drop-shadow-sm">
+                    NyaySetu
+                </h1>
+                <p class="text-xs md:text-sm text-gray-400 font-light">Advanced Legal Research & Analysis</p>
+            </div>
+        </a>
+
+        <div class="hidden md:flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-white/10 to-white/5 border border-white/20 text-white text-sm font-medium shadow-lg glow-white backdrop-blur-sm">
+            <i class="fa-solid fa-lock"></i>
+            Attorney-Client Privilege Protected
+        </div>
+    </nav>
+
+    <main class="flex-grow flex flex-col items-center justify-center pt-28 md:pt-32 pb-32 md:pb-40 px-4 md:px-6 relative overflow-hidden">
+
+        <!-- Background glow effects -->
+        <div class="absolute top-1/3 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-white/5 rounded-full blur-[120px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[250px] md:w-[400px] h-[250px] md:h-[400px] bg-white/3 rounded-full blur-[100px] pointer-events-none"></div>
+
+        <div id="hero-section" class="text-center max-w-4xl z-10 transition-all duration-500 slide-up px-4">
+            <div class="mb-6 md:mb-8 relative inline-block">
+                <div class="text-5xl md:text-7xl text-white/20 animate-pulse">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                </div>
+                <div class="absolute -top-2 -right-2 w-3 h-3 md:w-4 md:h-4 bg-white rounded-full animate-ping"></div>
+            </div>
+            <h2 class="hero-title text-4xl md:text-5xl lg:text-6xl font-bold mb-6 md:mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white via-gray-100 to-white drop-shadow-lg leading-tight">
+                Welcome to NyaySetu Research
+            </h2>
+            <p class="text-gray-300 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto mb-6 font-light">
+                I'm your advanced AI legal companion. Select a jurisdiction and search for comprehensive legal research.
+            </p>
+        </div>
+
+        <div id="results-container" class="w-full max-w-5xl hidden z-10 px-4">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-6 gap-4">
+                <div>
+                    <h3 class="text-2xl md:text-3xl text-white font-semibold mb-1">Search Results</h3>
+                    <p class="text-sm text-gray-400">Click any case for AI-powered analysis</p>
+                </div>
+                <button onclick="resetSearch()" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2 px-4 py-2 rounded-lg hover:bg-white/10 border border-white/10 glow-white-hover">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                    New Search
+                </button>
+            </div>
+            <div id="results-list" class="space-y-4">
+            </div>
+        </div>
+
+    </main>
+
+    <div class="fixed bottom-4 md:bottom-8 left-0 w-full px-4 z-40 flex justify-center">
+        <div class="w-full max-w-4xl relative group">
+            <div class="absolute -inset-1 bg-gradient-to-r from-white/20 via-gray-200/20 to-white/20 rounded-3xl blur opacity-20 group-hover:opacity-40 transition duration-300"></div>
+
+            <div class="relative glass-panel rounded-2xl p-2 flex flex-col md:flex-row items-stretch md:items-center gap-2 shadow-2xl glow-white transition-all focus-within:border-white/30 search-bar-mobile">
+
+                <div class="relative md:border-r border-white/20 md:pr-2 md:mr-2">
+                    <select id="db-selector" class="w-full md:w-auto bg-transparent text-white font-semibold text-sm rounded-lg px-3 py-3 md:py-2 outline-none cursor-pointer hover:bg-white/10 transition appearance-none pl-10 md:pl-8 pr-8">
+                        <option value="supreme_court" class="bg-black text-white font-bold">Supreme Court of India</option>
+                        <option value="allahabad" class="bg-black text-gray-300">Allahabad High Court</option>
+                        <option value="andhra_pradesh" class="bg-black text-gray-300">Andhra Pradesh High Court</option>
+                        <option value="bombay" class="bg-black text-gray-300">Bombay High Court</option>
+                        <option value="calcutta" class="bg-black text-gray-300">Calcutta High Court</option>
+                        <option value="chhattisgarh" class="bg-black text-gray-300">Chhattisgarh High Court</option>
+                        <option value="delhi" class="bg-black text-gray-300">Delhi High Court</option>
+                        <option value="gauhati" class="bg-black text-gray-300">Gauhati High Court</option>
+                        <option value="gujarat" class="bg-black text-gray-300">Gujarat High Court</option>
+                        <option value="himachal_pradesh" class="bg-black text-gray-300">Himachal Pradesh High Court</option>
+                        <option value="jk_ladakh" class="bg-black text-gray-300">J&K and Ladakh High Court</option>
+                        <option value="jharkhand" class="bg-black text-gray-300">Jharkhand High Court</option>
+                        <option value="karnataka" class="bg-black text-gray-300">Karnataka High Court</option>
+                        <option value="kerala" class="bg-black text-gray-300">Kerala High Court</option>
+                        <option value="madhya_pradesh" class="bg-black text-gray-300">Madhya Pradesh High Court</option>
+                        <option value="madras" class="bg-black text-gray-300">Madras High Court</option>
+                        <option value="manipur" class="bg-black text-gray-300">Manipur High Court</option>
+                        <option value="meghalaya" class="bg-black text-gray-300">Meghalaya High Court</option>
+                        <option value="orissa" class="bg-black text-gray-300">Orissa High Court</option>
+                        <option value="patna" class="bg-black text-gray-300">Patna High Court</option>
+                        <option value="punjab_haryana" class="bg-black text-gray-300">Punjab & Haryana High Court</option>
+                        <option value="rajasthan" class="bg-black text-gray-300">Rajasthan High Court</option>
+                        <option value="sikkim" class="bg-black text-gray-300">Sikkim High Court</option>
+                        <option value="telangana" class="bg-black text-gray-300">Telangana High Court</option>
+                        <option value="tripura" class="bg-black text-gray-300">Tripura High Court</option>
+                        <option value="uttarakhand" class="bg-black text-gray-300">Uttarakhand High Court</option>
+                    </select>
+                    <div class="absolute left-3 top-1/2 -translate-y-1/2 text-white pointer-events-none">
+                        <i class="fa-solid fa-building-columns"></i>
+                    </div>
+                </div>
+
+                <input
+                    type="text"
+                    id="search-input"
+                    placeholder="Describe your legal question (e.g., 'Contract Breach')..."
+                    class="w-full bg-transparent border-none text-white placeholder-gray-500 px-4 py-3 md:py-4 focus:outline-none text-base md:text-lg font-light"
+                    onkeypress="handleEnter(event)"
+                >
+
+                <button onclick="performSearch()" class="w-full md:w-14 h-12 md:h-14 rounded-xl bg-gradient-to-br from-white via-gray-100 to-gray-200 hover:from-gray-100 hover:to-white text-black flex items-center justify-center transition-all duration-300 active:scale-95 shadow-xl glow-white-hover font-semibold md:font-normal">
+                    <i class="fa-solid fa-paper-plane text-lg md:text-xl md:mr-0 mr-2"></i>
+                    <span class="md:hidden">Search</span>
+                </button>
+            </div>
+
+            <p class="text-center text-gray-500 text-xs mt-3 md:mt-4 font-light px-2">
+                This AI provides general legal information. Always consult with a qualified attorney.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // 1. Handle Enter Key
+        function handleEnter(e) {
+            if (e.key === 'Enter') performSearch();
+        }
+
+        // 2. Main Search Function
+        async function performSearch() {
+            const searchInput = document.getElementById('search-input');
+            const dbSelector = document.getElementById('db-selector');
+            const heroSection = document.getElementById('hero-section');
+            const resultsContainer = document.getElementById('results-container');
+            const resultsList = document.getElementById('results-list');
+
+            const query = searchInput.value;
+            const selectedDB = dbSelector.value; // Get the selected court
+
+            if (!query) return;
+
+            // UI Transition
+            heroSection.classList.add('hidden');
+            resultsContainer.classList.remove('hidden');
+            resultsList.innerHTML = '<div class="text-center text-gray-400 animate-pulse mt-10 text-lg md:text-xl flex items-center justify-center gap-3"><i class="fa-solid fa-magnifying-glass"></i> Searching vector database...</div>';
+
+            try {
+                // Call Python Backend
+                const response = await fetch('/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        query: query,
+                        database: selectedDB
+                    })
+                });
+
+                const data = await response.json();
+
+                // Clear Loading
+                resultsList.innerHTML = '';
+
+                if (!data || data.length === 0) {
+                    resultsList.innerHTML = `<div class="text-center text-gray-400 mt-10 text-lg">No cases found in <strong class="text-white">${selectedDB}</strong> matching "${query}".</div>`;
+                    return;
+                }
+
+                // Render Results
+                data.forEach((item, index) => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel-light rounded-xl p-0 overflow-hidden hover:border-white/30 transition-all duration-300 fade-in glow-white-hover';
+                    card.style.animationDelay = `${index * 0.1}s`;
+
+                    // Create the prompt for the Chatbot
+                    const promptText = `analyze and summarize this legal case. Here is the context of the case: ${item.summary}`;                    const safePrompt = encodeURIComponent(promptText);
+
+                    card.innerHTML = `
+                        <div class="p-5 md:p-6 cursor-pointer flex flex-col md:flex-row justify-between items-start group hover:bg-white/5 transition-all duration-300 rounded-xl"
+                            onclick="window.location.href='/Chatbot?initial_prompt=${safePrompt}'">
+
+                            <div class="flex-1 w-full">
+                                <div class="flex flex-wrap items-center gap-2 md:gap-3 mb-3">
+                                    <span class="text-xs font-semibold text-white bg-white/10 px-3 py-1 rounded-full border border-white/20">
+                                        ${selectedDB.replace('_', ' ').toUpperCase()}
+                                    </span>
+                                    <span class="text-xs font-semibold text-gray-300 bg-gray-500/10 px-3 py-1 rounded-full border border-gray-400/20">
+                                        AI Ready
+                                    </span>
+                                </div>
+                                <h4 class="text-lg md:text-xl font-semibold text-gray-100 mb-2 group-hover:text-white transition-colors">
+                                    ${item.title}
+                                </h4>
+                                <p class="text-sm md:text-base text-gray-400 group-hover:text-gray-300 transition-colors line-clamp-2 leading-relaxed">
+                                    ${item.summary}
+                                </p>
+                                <p class="text-xs text-gray-500 mt-3">Source: ${item.source || 'Local Database'}</p>
+                            </div>
+
+                            <div class="mt-3 md:mt-2 md:ml-6 text-white group-hover:text-gray-300 transition-all duration-300 text-xl md:text-2xl group-hover:scale-110 self-center md:self-start">
+                                <i class="fa-solid fa-robot"></i>
+                            </div>
+                        </div>
+                    `;
+                    resultsList.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                resultsList.innerHTML = '<div class="text-red-400 text-center mt-10 text-lg">Error connecting to server. Please ensure the backend is running.</div>';
+            }
+        }
+
+        // 3. Reset Function
+        function resetSearch() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('hero-section').classList.remove('hidden');
+            document.getElementById('results-container').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>

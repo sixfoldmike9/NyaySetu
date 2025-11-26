@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NyaySetu - Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ----------  TOKEN (Same as Login)  ---------- */
+:root{
+  --primary-white:#FFFFFF;
+  --primary-gray:#E5E5E5;
+  --gray-light:#CBCBCB;
+  --bg-dark:#000000;
+  --bg-light:#121212;
+  --text-main:#ffffff;
+  --text-sub:#ABABAB;
+  --glass:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.15);
+  --radius:1rem;
+}
+
+/* ----------  RESET  ---------- */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg-dark),var(--bg-light));
+  color:var(--text-main);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+}
+
+/* ----------  CARD  ---------- */
+.card{
+  width:100%;max-width:420px;
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  padding:2.2rem 2rem 2.5rem;
+  position:relative;
+}
+.card h1{
+  font-size:1.65rem;font-weight:600;text-align:center;margin-bottom:.35rem
+}
+.card p{font-size:.85rem;text-align:center;color:var(--text-sub);margin-bottom:1.8rem}
+.logo-link{
+  text-decoration:none;color:inherit;display:inline-block;
+  text-align:center;margin-bottom:1rem;
+}
+.logo-link:hover{opacity:0.8;transition:opacity 0.3s ease;}
+
+/* ----------  FORM  ---------- */
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.1rem}
+.form-group label{font-size:.8rem;color:#d1d5db}
+.form-group input{
+  padding:.65rem 1rem;border-radius:.6rem;
+  border:1px solid var(--border);background:var(--glass);
+  color:#fff;font-size:.93rem;
+}
+.form-group input:focus{
+  outline:none;border-color:var(--primary-white);
+  background:rgba(255,255,255,.14);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.1);
+}
+
+.auth-btn{
+  width:100%;padding:.78rem 1rem;margin-top:.2rem;
+  border:none;border-radius:.6rem;cursor:pointer;
+  background:linear-gradient(135deg,var(--primary-white),var(--primary-gray));
+  color:#000000;font-weight:600;font-size:.95rem;
+  transition:transform .22s, box-shadow .22s;
+  box-shadow: 0 4px 12px rgba(255,255,255,.2);
+}
+.auth-btn:hover{transform:translateY(-2px);box-shadow: 0 6px 20px rgba(255,255,255,.3);}
+
+.divider{display:flex;align-items:center;gap:.6rem;margin:1.6rem 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.8rem;color:var(--text-sub)}
+
+/* ----------  FLASK FLASH MESSAGES  ---------- */
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+.alert-error {
+    background: rgba(255, 80, 80, 0.2);
+    color: #ff8888;
+    border: 1px solid rgba(255, 80, 80, 0.3);
+}
+.alert-success {
+    background: rgba(80, 255, 80, 0.2);
+    color: #88ff88;
+    border: 1px solid rgba(80, 255, 80, 0.3);
+}
+
+/* ----------  RESPONSIVE  ---------- */
+@media(max-width:480px){
+  .card{padding:1.6rem}
+}
+</style>
+</head>
+
+<body>
+
+  <div class="card">
+    <a href="{{ url_for('home') }}" class="logo-link">
+      <h1>⚖️ NyaySetu</h1>
+    </a>
+    <p>Create your account today</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('register') }}">
+      
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input id="email" name="email" type="email" placeholder="you@example.com" required>
+      </div>
+
+      <div class="form-group">
+        <label for="password">Set Password</label>
+        <input id="password" name="password" type="password" placeholder="••••••••" minlength="6" required>
+      </div>
+
+      <button class="auth-btn" type="submit">Sign Up</button>
+    </form>
+
+    <div class="divider"><span>or</span></div>
+
+    <small style="display:block; text-align:center; font-size: 0.8rem; color: var(--text-sub);">
+      Already have an account? 
+      <a href="{{ url_for('login') }}" style="color:white; font-weight:600; text-decoration:none;">Log in</a>
+    </small>
+
+  </div>
+
+</body>
+</html>

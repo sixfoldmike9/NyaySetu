@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NyaySetu - AI Legal Assistant</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #FFFFFF 0%, #E5E5E5 100%);
+            --secondary-gradient: linear-gradient(135deg, #CBCBCB 0%, #ABABAB 100%);
+            --dark-gradient: linear-gradient(135deg, #000000 0%, #0A0A0A 50%, #121212 100%);
+            --white-gradient: linear-gradient(135deg, #FFFFFF 0%, #F0F0F0 50%, #E5E5E5 100%);
+            --gray-gradient: linear-gradient(135deg, #8B8B8B 0%, #6B6B6B 100%);
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.8);
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --accent-white: #FFFFFF;
+            --accent-gray: #ABABAB;
+            --black-pure: #000000;
+            --error-red: #ff4757;
+            --warning-orange: #ffa726;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--dark-gradient);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text-primary);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* Enhanced animated background */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.025) 0%, transparent 50%),
+        radial-gradient(circle at 60% 60%, rgba(255, 255, 255, 0.015) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(30px, -30px) rotate(90deg); }
+            50% { transform: translate(-20px, 20px) rotate(180deg); }
+            75% { transform: translate(20px, -20px) rotate(270deg); }
+        }
+
+        /* Enhanced header with better visual hierarchy */
+        .header {
+            background: linear-gradient(90deg, rgba(10, 10, 10, 0.95) 0%, rgba(18, 18, 18, 0.95) 100%);
+            padding: 24px 40px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.03), transparent);
+            animation: shimmer 4s infinite;
+            pointer-events: none;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 32px;
+            filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3));
+            animation: glow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 4px 8px rgba(255, 255, 255, 0.3)); }
+            to { filter: drop-shadow(0 6px 12px rgba(255, 255, 255, 0.5)); }
+        }
+
+        .title {
+            font-size: 28px;
+            font-weight: 900;
+            background: var(--white-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+            letter-spacing: -0.02em;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-top: 4px;
+        }
+
+        .privilege-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--accent-white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .privilege-badge::before {
+            content: '🔒';
+            font-size: 14px;
+        }
+
+        .privilege-badge::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: slide 3s infinite;
+        }
+
+        @keyframes slide {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .chat-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+        }
+
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 30px;
+            scroll-behavior: smooth;
+            mask: linear-gradient(to bottom, transparent 0%, black 3%, black 97%, transparent 100%);
+        }
+
+        .messages-area::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Enhanced welcome message */
+        .welcome-message {
+            text-align: center;
+            padding: 60px 40px 80px;
+            background: var(--glass-bg);
+            border-radius: 32px;
+            border: 1px solid var(--glass-border);
+            margin: 40px 20px;
+            backdrop-filter: blur(25px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-message::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(255, 255, 255, 0.03), transparent, rgba(255, 255, 255, 0.02), transparent);
+            animation: rotate 20s linear infinite;
+            pointer-events: none;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            margin-bottom: 24px;
+            filter: drop-shadow(0 8px 16px rgba(255, 255, 255, 0.3));
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .welcome-title {
+            font-size: 36px;
+            font-weight: 900;
+            margin-bottom: 20px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .welcome-text {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 48px;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Enhanced example prompts grid */
+        .example-prompts {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .example-prompt {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 28px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+            position: relative;
+            overflow: hidden;
+            text-align: left;
+        }
+
+        .example-prompt::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .example-prompt:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 20px rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .example-prompt:hover::before {
+            opacity: 1;
+        }
+
+        .example-prompt:active {
+            transform: translateY(-4px);
+        }
+
+        .example-prompt-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            display: inline-block;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+        }
+
+        .example-prompt-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            background: var(--white-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .example-prompt-text {
+            font-size: 14px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Enhanced message styling */
+        .message {
+            margin-bottom: 40px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+            max-width: 90%;
+            opacity: 0;
+            animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .message.user {
+            flex-direction: row-reverse;
+            margin-left: auto;
+        }
+
+        .message.assistant {
+            margin-right: auto;
+        }
+
+        .message-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 18px;
+            flex-shrink: 0;
+            margin-top: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message.assistant .message-avatar {
+            background: var(--primary-gradient);
+            color: #000000;
+            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.25);
+        }
+
+        .message.user .message-avatar {
+            background: var(--secondary-gradient);
+            color: #000000;
+            box-shadow: 0 12px 30px rgba(200, 200, 200, 0.3);
+        }
+
+        .message-avatar::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: rotate 4s linear infinite;
+            pointer-events: none;
+        }
+
+        .message-content {
+            flex: 1;
+            background: var(--glass-bg);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid var(--glass-border);
+            line-height: 1.7;
+            font-size: 16px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .message-content:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .message.assistant .message-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            font-size: 17px;
+        }
+
+        .message.user .message-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.08) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Enhanced typography for AI responses */
+        .message.assistant .message-content h3 {
+            color: var(--accent-white);
+            font-size: 1.4em;
+            font-weight: 800;
+            margin-top: 1.8em;
+            margin-bottom: 1em;
+            padding-bottom: 0.8em;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .message.assistant .message-content h3:first-child {
+            margin-top: 0;
+        }
+
+        .message.assistant .message-content h3::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 80px;
+            height: 3px;
+            background: var(--white-gradient);
+            border-radius: 3px;
+        }
+
+        .message.assistant .message-content p {
+            margin-bottom: 1em;
+            line-height: 1.8;
+        }
+
+        .message.assistant .message-content ul,
+        .message.assistant .message-content ol {
+            padding-left: 32px;
+            margin: 1.2em 0;
+            line-height: 1.8;
+        }
+
+        .message.assistant .message-content ol {
+            counter-reset: item;
+        }
+
+        .message.assistant .message-content li {
+            margin-bottom: 0.8em;
+            line-height: 1.8;
+            position: relative;
+        }
+
+        .message.assistant .message-content ul li::marker {
+            color: var(--accent-white);
+            font-weight: bold;
+        }
+
+        .message.assistant .message-content ol li::marker {
+            color: var(--accent-white);
+            font-weight: bold;
+        }
+
+        .message.assistant .message-content strong {
+            color: #FFFFFF;
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--accent-white), var(--accent-gray));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .message.assistant .message-content br {
+            display: block;
+            margin: 0.5em 0;
+            content: "";
+        }
+
+        .message.assistant .message-content code {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+            color: #E5E5E5;
+        }
+
+        .message.assistant .message-content pre {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1em;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1em 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .message.assistant .message-content pre code {
+            background: transparent;
+            padding: 0;
+        }
+
+        /* Enhanced input area */
+        .input-area {
+            padding: 32px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.4) 0%, rgba(26, 26, 46, 0.4) 100%);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(25px);
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .input-box {
+            width: 100%;
+            background: var(--glass-bg);
+            border: 2px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px 80px 24px 28px;
+            font-size: 17px;
+            color: var(--text-primary);
+            resize: none;
+            font-family: inherit;
+            font-weight: 500;
+            backdrop-filter: blur(25px);
+            min-height: 72px;
+            max-height: 200px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow-y: auto;
+        }
+
+        .input-box:focus {
+            outline: none;
+            border-color: var(--accent-white);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.1), 0 12px 40px rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .input-box::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .send-button {
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 52px;
+            height: 52px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            color: #000000;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
+            font-weight: bold;
+        }
+
+        .send-button:hover {
+            transform: translateY(-50%) scale(1.08);
+            box-shadow: 0 12px 32px rgba(255, 255, 255, 0.35);
+        }
+
+        .send-button:active {
+            transform: translateY(-50%) scale(0.95);
+        }
+
+        .send-button.loading {
+            background: linear-gradient(135deg, #666 0%, #888 100%);
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .send-button.loading::after {
+            content: '';
+            width: 24px;
+            height: 24px;
+            border: 3px solid #333;
+            border-top: 3px solid #fff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .disclaimer {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Enhanced typing indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 40px;
+            max-width: 90%;
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
+        .typing-content {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(25px);
+            border-radius: 24px;
+            padding: 32px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 8px;
+        }
+
+        .typing-dot {
+            width: 10px;
+            height: 10px;
+            background: var(--accent-white);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: typingDot 1.6s ease-in-out infinite;
+        }
+
+        .typing-dot:nth-child(1) { animation-delay: 0s; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typingDot {
+            0%, 60%, 100% { 
+                opacity: 0.3;
+                transform: scale(1);
+            }
+            30% { 
+                opacity: 1;
+                transform: scale(1.3);
+            }
+        }
+
+        .typing-text {
+            color: var(--text-secondary);
+            font-size: 16px;
+            font-style: italic;
+            margin-left: 12px;
+            font-weight: 500;
+        }
+
+        /* Status indicators */
+        .status-indicator {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            transition: all 0.3s ease;
+            transform: translateY(-100px);
+        }
+
+        .status-indicator.show {
+            transform: translateY(0);
+        }
+
+        .status-indicator.success {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--accent-white);
+        }
+
+        .status-indicator.error {
+            background: rgba(255, 71, 87, 0.2);
+            border: 1px solid rgba(255, 71, 87, 0.3);
+            color: var(--error-red);
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .header {
+                padding: 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .welcome-message {
+                margin: 20px 10px;
+                padding: 40px 20px;
+            }
+            
+            .welcome-title {
+                font-size: 28px;
+            }
+            
+            .example-prompts {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            
+            .messages-area {
+                padding: 20px 15px;
+            }
+            
+            .message {
+                max-width: 95%;
+                margin-bottom: 30px;
+                gap: 12px;
+            }
+            
+            .message-avatar {
+                width: 44px;
+                height: 44px;
+                font-size: 16px;
+            }
+            
+            .message-content {
+                padding: 24px;
+                font-size: 15px;
+            }
+            
+            .input-area {
+                padding: 20px;
+            }
+            
+            .input-box {
+                padding: 20px 70px 20px 20px;
+                font-size: 16px;
+                min-height: 64px;
+            }
+            
+            .send-button {
+                width: 48px;
+                height: 48px;
+                right: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .welcome-text {
+                font-size: 16px;
+            }
+            
+            .example-prompt {
+                padding: 20px;
+            }
+            
+            .message-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <a href="{{ url_for('home') }}" class="logo-section" style="text-decoration: none; color: inherit;">
+                <div class="logo">⚖️</div>
+                <div>
+                    <h1 class="title">NyaySetu</h1>
+                    <div class="subtitle">AI Legal Assistant - Advanced legal research & analysis</div>
+                </div>
+            </a>
+            <div class="privilege-badge">Attorney-Client Privilege Protected</div>
+        </div>
+    </div>
+
+    <div class="chat-container">
+        <div class="messages-area" id="messagesArea">
+            <div class="welcome-message">
+                <div class="welcome-icon">⚖️</div>
+                <h2 class="welcome-title">Welcome to NyaySetu AI Assistant</h2>
+                <p class="welcome-text">
+                    I'm your advanced AI legal companion, designed to provide comprehensive legal research, 
+                    sophisticated document analysis, and expert legal guidance. This conversation is protected 
+                    under attorney-client privilege. How may I assist you with your legal matters today?
+                </p>
+                
+                <div class="example-prompts">
+                    <div class="example-prompt" onclick="sendExamplePrompt('Draft a comprehensive NDA with reciprocal confidentiality clauses')">
+                        <div class="example-prompt-icon">📝</div>
+                        <div class="example-prompt-title">Advanced Contract Drafting</div>
+                        <div class="example-prompt-text">Create sophisticated contracts, agreements, and legal documents with expert precision</div>
+                    </div>
+                    <div class="example-prompt" onclick="sendExamplePrompt('Research recent precedents in employment discrimination law')">
+                        <div class="example-prompt-icon">🔍</div>
+                        <div class="example-prompt-title">Legal Research & Precedents</div>
+                        <div class="example-prompt-text">Deep dive into case law, statutes, regulations, and recent legal developments</div>
+                    </div>
+                    <div class="example-prompt" onclick="sendExamplePrompt('Analyze this merger agreement for potential risks and opportunities')">
+                        <div class="example-prompt-icon">📊</div>
+                        <div class="example-prompt-title">Document Analysis</div>
+                        <div class="example-prompt-text">Comprehensive review and risk assessment of complex legal documents</div>
+                    </div>
+                    <div class="example-prompt" onclick="sendExamplePrompt('Explain the implications of recent data privacy legislation')">
+                        <div class="example-prompt-icon">⚡</div>
+                        <div class="example-prompt-title">Legal Strategy & Compliance</div>
+                        <div class="example-prompt-text">Strategic guidance on legal compliance and regulatory requirements</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <div class="input-container">
+                <textarea 
+                    id="messageInput" 
+                    class="input-box" 
+                    placeholder="Describe your legal question or upload documents for analysis..."
+                    rows="1"
+                ></textarea>
+                <button class="send-button" id="sendButton" onclick="sendMessage()">
+                    ➤
+                </button>
+            </div>
+            <div class="disclaimer">
+                This AI provides general legal information and analysis. Always consult with a qualified attorney for specific legal advice and representation.
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        const messagesArea = document.getElementById('messagesArea');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Store conversation history
+        let conversationHistory = [];
+
+        // Auto-resize textarea
+        messageInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+        });
+
+        // Send message on Enter (but allow Shift+Enter for new line)
+        messageInput.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        function sendExamplePrompt(prompt) {
+            messageInput.value = prompt;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Clear welcome message if it exists
+            const welcomeMessage = document.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+
+            // Add user message
+            addMessage(message, 'user');
+            messageInput.value = '';
+            messageInput.style.height = 'auto';
+
+            // Show typing indicator
+            showTypingIndicator();
+
+            // Call Flask API with conversation history
+            fetch("http://127.0.0.1:5000/query", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    question: message,
+                    conversation_history: conversationHistory
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                if (data.status === "success") {
+                    addMessage(data.answer, 'assistant');
+
+                    // Store in conversation history (use raw_answer for context)
+                    conversationHistory.push({
+                        question: message,
+                        answer: data.raw_answer || data.answer
+                    });
+
+                    // Keep only last 5 exchanges to avoid token limits
+                    if (conversationHistory.length > 5) {
+                        conversationHistory = conversationHistory.slice(-5);
+                    }
+                } else {
+                    addMessage("⚠️ Error: " + data.answer, 'assistant');
+                }
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                addMessage("⚠️ Failed to connect to AI backend. Please try again.", 'assistant');
+                console.error(error);
+            });
+        }
+
+
+        // Format text content for better display
+        function formatContent(content) {
+            // Convert markdown-style bold **text** to <strong>
+            content = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // Convert markdown-style headers ### to <h3>
+            content = content.replace(/^### (.*?)$/gm, '<h3>$1</h3>');
+            content = content.replace(/^## (.*?)$/gm, '<h3>$1</h3>');
+
+            // Convert numbered lists (1. , 2. , etc.)
+            content = content.replace(/^\d+\.\s+(.+)$/gm, '<li>$1</li>');
+
+            // Wrap consecutive <li> tags in <ol>
+            content = content.replace(/(<li>.*?<\/li>\s*)+/gs, function(match) {
+                return '<ol>' + match + '</ol>';
+            });
+
+            // Convert bullet points (- or *) to unordered lists
+            content = content.replace(/^[\-\*]\s+(.+)$/gm, '<li>$1</li>');
+
+            // Wrap consecutive <li> without <ol> in <ul>
+            content = content.replace(/(<li>.*?<\/li>(?:\s*<li>.*?<\/li>)*)/g, function(match) {
+                if (!match.includes('<ol>')) {
+                    return '<ul>' + match + '</ul>';
+                }
+                return match;
+            });
+
+            // Convert line breaks to <br> (but not inside other HTML tags)
+            content = content.replace(/\n/g, '<br>');
+
+            // Clean up extra line breaks around headers and lists
+            content = content.replace(/<br>\s*<h3>/g, '<h3>');
+            content = content.replace(/<\/h3>\s*<br>/g, '</h3>');
+            content = content.replace(/<br>\s*<ul>/g, '<ul>');
+            content = content.replace(/<\/ul>\s*<br>/g, '</ul>');
+            content = content.replace(/<br>\s*<ol>/g, '<ol>');
+            content = content.replace(/<\/ol>\s*<br>/g, '</ol>');
+
+            return content;
+        }
+
+        function addMessage(content, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}`;
+
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = type === 'user' ? 'U' : '⚖️';
+
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+
+            // Format and render assistant messages with proper HTML
+            if (type === 'assistant') {
+                messageContent.innerHTML = formatContent(content);
+            } else {
+                messageContent.textContent = content;
+            }
+
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(messageContent);
+
+            messagesArea.appendChild(messageDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message assistant';
+            typingDiv.id = 'typingIndicator';
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = '⚖️';
+            
+            const typingContent = document.createElement('div');
+            typingContent.className = 'message-content typing-indicator';
+            typingContent.style.display = 'flex';
+            typingContent.innerHTML = `
+                <span>Legal AI is analyzing...</span>
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            `;
+            
+            typingDiv.appendChild(avatar);
+            typingDiv.appendChild(typingContent);
+            messagesArea.appendChild(typingDiv);
+            messagesArea.scrollTop = messagesArea.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+
+    window.onload = function() {
+        // 1. Get the prompt from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const promptText = urlParams.get('initial_prompt');
+
+        if (promptText) {
+            console.log("Found prompt:", promptText);
+            
+            // 2. Retry finding elements (in case they load slowly)
+            const attemptAutoFill = setInterval(() => {
+                const chatInput = document.getElementById('messageInput');
+                const sendButton = document.getElementById('sendButton');
+
+                if (chatInput && sendButton) {
+                    // Stop checking, we found them
+                    clearInterval(attemptAutoFill);
+
+                    // 3. Set the value
+                    chatInput.value = promptText;
+                    
+                    // 4. CRITICAL: Fire events so the app "sees" the text
+                    // This mimics a human typing
+                    chatInput.dispatchEvent(new Event('input', { bubbles: true }));
+                    chatInput.dispatchEvent(new Event('change', { bubbles: true }));
+
+                    console.log("Text pasted and events fired.");
+
+                    // 5. Click the button after a short delay
+                    setTimeout(() => {
+                        console.log("Clicking send button...");
+                        sendButton.click();
+                        
+                        // OPTIONAL BACKUP: If click doesn't work, try calling the function directly
+                        // if (typeof sendMessage === "function") {
+                        //     sendMessage();
+                        // }
+                    }, 500);
+                }
+            }, 100); // Check every 100ms
+            
+            // Stop trying after 5 seconds if elements aren't found
+            setTimeout(() => clearInterval(attemptAutoFill), 5000);
+        }
+    };
+    </script>
+</body>
+</html>

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NyaySetu - Verify OTP</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ----------  TOKEN (Same as Login/Register)  ---------- */
+:root{
+  --primary-white:#FFFFFF;
+  --primary-gray:#E5E5E5;
+  --gray-light:#CBCBCB;
+  --bg-dark:#000000;
+  --bg-light:#121212;
+  --text-main:#ffffff;
+  --text-sub:#ABABAB;
+  --glass:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.15);
+  --radius:1rem;
+}
+
+/* ----------  RESET  ---------- */
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  background:linear-gradient(135deg,var(--bg-dark),var(--bg-light));
+  color:var(--text-main);
+  display:flex;align-items:center;justify-content:center;
+  padding:2rem;
+}
+
+/* ----------  CARD  ---------- */
+.card{
+  width:100%;max-width:420px;
+  background:var(--bg-dark);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  padding:2.2rem 2rem 2.5rem;
+  position:relative;
+}
+.card h1{
+  font-size:1.65rem;font-weight:600;text-align:center;margin-bottom:.35rem
+}
+.card p{font-size:.85rem;text-align:center;color:var(--text-sub);margin-bottom:1.8rem}
+.logo-link{
+  text-decoration:none;color:inherit;display:inline-block;
+  text-align:center;margin-bottom:1rem;
+}
+.logo-link:hover{opacity:0.8;transition:opacity 0.3s ease;}
+
+.email-display{
+  background:var(--glass);
+  padding:.8rem;
+  border-radius:.6rem;
+  text-align:center;
+  margin-bottom:1.2rem;
+  border:1px solid var(--border);
+}
+.email-display strong{
+  color:var(--primary-white);
+  font-weight:600;
+}
+
+/* ----------  FORM  ---------- */
+.form-group{display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.1rem}
+.form-group label{font-size:.8rem;color:#d1d5db}
+.form-group input{
+  padding:.65rem 1rem;border-radius:.6rem;
+  border:1px solid var(--border);background:var(--glass);
+  color:#fff;font-size:.93rem;
+  text-align:center;
+  letter-spacing:0.3em;
+  font-weight:600;
+  font-size:1.2rem;
+}
+.form-group input:focus{
+  outline:none;border-color:var(--primary-white);
+  background:rgba(255,255,255,.14);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.1);
+}
+
+.auth-btn{
+  width:100%;padding:.78rem 1rem;margin-top:.2rem;
+  border:none;border-radius:.6rem;cursor:pointer;
+  background:linear-gradient(135deg,var(--primary-white),var(--primary-gray));
+  color:#000000;font-weight:600;font-size:.95rem;
+  transition:transform .22s, box-shadow .22s;
+  box-shadow: 0 4px 12px rgba(255,255,255,.2);
+}
+.auth-btn:hover{transform:translateY(-2px);box-shadow: 0 6px 20px rgba(255,255,255,.3);}
+
+.resend-btn{
+  width:100%;padding:.65rem 1rem;margin-top:.8rem;
+  border:1px solid var(--border);border-radius:.6rem;cursor:pointer;
+  background:transparent;
+  color:var(--text-main);font-weight:500;font-size:.88rem;
+  transition:all .22s;
+  text-decoration:none;
+  display:inline-block;
+  text-align:center;
+}
+.resend-btn:hover{
+  background:var(--glass);
+  border-color:var(--primary-white);
+}
+
+.divider{display:flex;align-items:center;gap:.6rem;margin:1.6rem 0}
+.divider::before,.divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.divider span{font-size:.8rem;color:var(--text-sub)}
+
+.info-box{
+  background:rgba(59, 130, 246, 0.1);
+  border:1px solid rgba(59, 130, 246, 0.3);
+  padding:1rem;
+  border-radius:.6rem;
+  margin-bottom:1.2rem;
+  font-size:.83rem;
+  color:var(--text-sub);
+  text-align:center;
+}
+.info-box strong{
+  color:#60a5fa;
+}
+
+/* ----------  FLASK FLASH MESSAGES  ---------- */
+.alert {
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    text-align: center;
+}
+.alert-error {
+    background: rgba(255, 80, 80, 0.2);
+    color: #ff8888;
+    border: 1px solid rgba(255, 80, 80, 0.3);
+}
+.alert-success {
+    background: rgba(80, 255, 80, 0.2);
+    color: #88ff88;
+    border: 1px solid rgba(80, 255, 80, 0.3);
+}
+.alert-warning {
+    background: rgba(255, 193, 7, 0.2);
+    color: #ffd966;
+    border: 1px solid rgba(255, 193, 7, 0.3);
+}
+.alert-info {
+    background: rgba(59, 130, 246, 0.2);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* ----------  RESPONSIVE  ---------- */
+@media(max-width:480px){
+  .card{padding:1.6rem}
+}
+</style>
+</head>
+
+<body>
+
+  <div class="card">
+    <a href="{{ url_for('home') }}" class="logo-link">
+      <h1>⚖️ NyaySetu</h1>
+    </a>
+    <p>Verify Your Email</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="info-box">
+      📧 We've sent a <strong>6-digit OTP</strong> to your email. Please check your inbox (and spam folder).
+    </div>
+
+    <div class="email-display">
+      <strong>{{ email }}</strong>
+    </div>
+
+    <form method="POST" action="{{ url_for('verify_otp_page') }}">
+      <input type="hidden" name="email" value="{{ email }}">
+
+      <div class="form-group">
+        <label for="otp">Enter OTP</label>
+        <input
+          id="otp"
+          name="otp"
+          type="text"
+          placeholder="••••••"
+          maxlength="6"
+          pattern="\d{6}"
+          required
+          autocomplete="off"
+          inputmode="numeric"
+        >
+      </div>
+
+      <button class="auth-btn" type="submit">Verify OTP</button>
+    </form>
+
+    <a href="{{ url_for('resend_otp', email=email) }}" class="resend-btn">
+      🔄 Resend OTP
+    </a>
+
+    <div class="divider"><span>or</span></div>
+
+    <small style="display:block; text-align:center; font-size: 0.8rem; color: var(--text-sub);">
+      Already verified?
+      <a href="{{ url_for('login') }}" style="color:white; font-weight:600; text-decoration:none;">Log in</a>
+    </small>
+
+  </div>
+
+  <script>
+    // Auto-focus OTP input
+    document.getElementById('otp').focus();
+
+    // Allow only numbers in OTP input
+    document.getElementById('otp').addEventListener('input', function(e) {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  </script>
+
+</body>
+</html>
